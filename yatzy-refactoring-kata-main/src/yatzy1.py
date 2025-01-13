@@ -1,160 +1,81 @@
 class Yatzy:
+    @staticmethod
+    def chance(d1: int, d2: int, d3: int, d4: int, d5: int) -> int:
+   
+        return d1 + d2 + d3 + d4 + d5
 
     @staticmethod
-    def chance(d1, d2, d3, d4, d5):
-        total = 0
-        total += d1
-        total += d2
-        total += d3
-        total += d4
-        total += d5
-        return total
-
-    @staticmethod
-    def yatzy(dice):
-        counts = [0] * (len(dice) + 1)
+    def yatzy(dice: list[int]) -> int:
+        counts = [0] * 6
         for die in dice:
             counts[die - 1] += 1
-        for i in range(len(counts)):
-            if counts[i] == 5:
-                return 50
+        return 50 if 5 in counts else 0
+
+    @staticmethod
+    def ones(d1: int, d2: int, d3: int, d4: int, d5: int) -> int:
+        return sum(1 for die in [d1, d2, d3, d4, d5] if die == 1)
+
+    @staticmethod
+    def twos(d1: int, d2: int, d3: int, d4: int, d5: int) -> int:
+        return sum(2 for die in [d1, d2, d3, d4, d5] if die == 2)
+
+    @staticmethod
+    def threes(d1: int, d2: int, d3: int, d4: int, d5: int) -> int:
+        return sum(3 for die in [d1, d2, d3, d4, d5] if die == 3)
+
+    def __init__(self, d1: int = 0, d2: int = 0, d3: int = 0, d4: int = 0, d5: int = 0):
+        self.dice = [d1, d2, d3, d4, d5]
+
+    def fours(self) -> int:
+        return sum(4 for die in self.dice if die == 4)
+
+    def fives(self) -> int:
+        return sum(5 for die in self.dice if die == 5)
+
+    def sixes(self) -> int:
+        return sum(6 for die in self.dice if die == 6)
+
+    def score_pair(self, d1: int, d2: int, d3: int, d4: int, d5: int) -> int:
+        counts = [0] * 6
+        for die in [d1, d2, d3, d4, d5]:
+            counts[die - 1] += 1
+        for i in range(5, -1, -1):
+            if counts[i] >= 2:
+                return (i + 1) * 2
         return 0
 
     @staticmethod
-    def ones(d1, d2, d3, d4, d5):
-        sum = 0
-        if (d1 == 1):
-            sum += 1
-        if (d2 == 1):
-            sum += 1
-        if (d3 == 1):
-            sum += 1
-        if (d4 == 1):
-            sum += 1
-        if (d5 == 1):
-            sum += 1
-
-        return sum
-
-    @staticmethod
-    def twos(d1, d2, d3, d4, d5):
-        sum = 0
-        if (d1 == 2):
-            sum += 2
-        if (d2 == 2):
-            sum += 2
-        if (d3 == 2):
-            sum += 2
-        if (d4 == 2):
-            sum += 2
-        if (d5 == 2):
-            sum += 2
-        return sum
-
-    @staticmethod
-    def threes(d1, d2, d3, d4, d5):
-        s = 0
-        if (d1 == 3):
-            s += 3
-        if (d2 == 3):
-            s += 3
-        if (d3 == 3):
-            s += 3
-        if (d4 == 3):
-            s += 3
-        if (d5 == 3):
-            s += 3
-        return s
-
-    def __init__(self, d1=0, d2=0, d3=0, d4=0, _5=0):
-        self.dice = [0] * 5
-        self.dice[0] = d1
-        self.dice[1] = d2
-        self.dice[2] = d3
-        self.dice[3] = d4
-        self.dice[4] = _5
-
-    def fours(self):
-        sum = 0
-        for at in range(5):
-            if (self.dice[at] == 4):
-                sum += 4
-        return sum
-
-    def fives(self):
-        s = 0
-        i = 0
-        for i in range(len(self.dice)):
-            if (self.dice[i] == 5):
-                s = s + 5
-        return s
-
-    def sixes(self):
-        sum = 0
-        for at in range(len(self.dice)):
-            if (self.dice[at] == 6):
-                sum = sum + 6
-        return sum
-
-    def score_pair(self, d1, d2, d3, d4, d5):
+    def two_pair(d1: int, d2: int, d3: int, d4: int, d5: int) -> int:
         counts = [0] * 6
-        counts[d1 - 1] += 1
-        counts[d2 - 1] += 1
-        counts[d3 - 1] += 1
-        counts[d4 - 1] += 1
-        counts[d5 - 1] += 1
-        at = 0
-        for at in range(6):
-            if (counts[6 - at - 1] == 2):
-                return (6 - at) * 2
-        return 0
-
-    @staticmethod
-    def two_pair(d1, d2, d3, d4, d5):
-        counts = [0] * 6
-        counts[d1 - 1] += 1
-        counts[d2 - 1] += 1
-        counts[d3 - 1] += 1
-        counts[d4 - 1] += 1
-        counts[d5 - 1] += 1
-        n = 0
+        for die in [d1, d2, d3, d4, d5]:
+            counts[die - 1] += 1
+        pairs = 0
         score = 0
-        for i in range(6):
-            if (counts[6 - i - 1] >= 2):
-                n = n + 1
-                score += (6 - i)
-
-        if (n == 2):
-            return score * 2
-        else:
-            return 0
+        for i in range(5, -1, -1):
+            if counts[i] >= 2:
+                pairs += 1
+                score += (i + 1)
+        return score * 2 if pairs == 2 else 0
 
     @staticmethod
-    def four_of_a_kind(_1, _2, d3, d4, d5):
-        tallies = [0] * 6
-        tallies[_1 - 1] += 1
-        tallies[_2 - 1] += 1
-        tallies[d3 - 1] += 1
-        tallies[d4 - 1] += 1
-        tallies[d5 - 1] += 1
+    def four_of_a_kind(d1: int, d2: int, d3: int, d4: int, d5: int) -> int:
+        counts = [0] * 6
+        for die in [d1, d2, d3, d4, d5]:
+            counts[die - 1] += 1
         for i in range(6):
-            if (tallies[i] >= 4):
+            if counts[i] >= 4:
                 return (i + 1) * 4
         return 0
 
     @staticmethod
-    def three_of_a_kind(d1, d2, d3, d4, d5):
-        t = [0] * 6
-        t[d1 - 1] += 1
-        t[d2 - 1] += 1
-        t[d3 - 1] += 1
-        t[d4 - 1] += 1
-        t[d5 - 1] += 1
+    def three_of_a_kind(d1: int, d2: int, d3: int, d4: int, d5: int) -> int:
+        counts = [0] * 6
+        for die in [d1, d2, d3, d4, d5]:
+            counts[die - 1] += 1
         for i in range(6):
-            if (t[i] >= 3):
+            if counts[i] >= 3:
                 return (i + 1) * 3
         return 0
-
     @staticmethod
     def smallStraight(d1, d2, d3, d4, d5):
         tallies = [0] * 6
